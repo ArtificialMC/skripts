@@ -1,0 +1,63 @@
+on first join:
+	set {hellspider.%player%} to 0
+	set {hellwalker.%player%} to 0
+	set {hellhusk.%player%} to 0
+	set {hellwitch.%player%} to 0
+	set {helldrowned.%player%} to 0
+on join:
+	if {hellspider.%player%} is not set:
+		set {hellspider.%player%} to 0
+	if {hellwalker.%player%} is not set:
+		set {hellwalker.%player%} to 0
+	if {hellhusk.%player%} is not set:
+		set {hellhusk.%player%} to 0
+	if {hellwitch.%player%} is not set:
+		set {hellwitch.%player%} to 0
+	if {helldrowned.%player%} is not set:
+		set {helldrowned.%player%} to 0
+
+command /stats [<text>] [<text>] [<text>]:
+	trigger:
+		if arg-1 is not set:
+			send "=--------=Arena Kills=--------="
+			send "Hell Spider kills: %{hellspider.%player%}%"
+			send "Hell Walker kills: %{hellwalker.%player%}%"
+			send "Hell Husk kills: %{hellhusk.%player%}%"
+			send "Hell Witch kills: %{hellwitch.%player%}%"
+			send "Hell Drowned kills: %{helldrowned.%player%}%"
+		if arg-1 is "check":
+			if arg-2 is set:
+				send "=--------=Arena Kills for %arg-2%=--------="
+				send "Hell Spider kills: %{hellspider.%arg-2%}%"
+				send "Hell Walker kills: %{hellwalker.%arg-2%}%"
+				send "Hell Husk kills: %{hellhusk.%arg-2%}%"
+				send "Hell Witch kills: %{hellwitch.%arg-2%}%"
+				send "Hell Drowned kills: %{helldrowned.%arg-2%}%"
+		if arg-1 is "reset":
+			if arg-2 is "all":
+				if arg-3 is set:
+					set {hellspider.%arg-3%} to 0
+					set {hellwalker.%arg-3%} to 0
+					set {hellhusk.%arg-3%} to 0
+					set {hellwitch.%arg-3%} to 0
+					set {helldrowned.%arg-3%} to 0
+					send "%arg-3%'s stats has been reset."
+		if arg-1 is "reload":
+			execute console command "/sk reload mythicmobs"
+			send "mythicmobs.sk reloaded"
+
+on mythicmob deathevent:
+	if displayname of activemob event-activemob is "&c&lHell Spider":
+		add 1 to {hellspider.%event-killer%}
+	if displayname of activemob event-activemob is "&c&lHell Walker":
+		add 1 to {hellwalker.%event-killer%}
+	if displayname of activemob event-activemob is "&4&lHell Husk":
+		add 1 to {hellhusk.%event-killer%}
+	if displayname of activemob event-activemob is "&4&lHell Witch":
+		add 1 to {hellwitch.%event-killer%}
+	if displayname of activemob event-activemob is "&b&lHell Drowned":
+		add 1 to {helldrowned.%event-killer%}
+
+on mythicmob spawnevent:
+	if displayname of activemob event-activemob is "&2&lCommon Boss" or "&d&lUncommon Boss":
+		broadcast "a &o*REDACTED* &r&ljust spawned at %location of activemob event-activemob%"
